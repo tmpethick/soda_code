@@ -1,0 +1,8 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+logs/
+modded-nanogpt/data/fineweb100B/
+*.pt
+*.pth
+*.bin
