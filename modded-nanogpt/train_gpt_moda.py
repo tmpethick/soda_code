@@ -138,16 +138,18 @@ class MODA(torch.optim.Optimizer):
                 state = self.state[p]
                 if "mom_buff" not in state:
                     state["mom_buff"] = torch.clone(g)
+                    state["z0"] = torch.clone(p.data)
                 mom_buff = state["mom_buff"]
+                z0 = state["z0"]
 
                 mom_buff.mul_(1 - dual_momentum1).add_(g, alpha=dual_momentum1)
                 if dual_momentum2 != 0:
                     mom_buff = mom_buff.mul(1 - dual_momentum2).add(g, alpha=dual_momentum2)
 
-                update = norm_backend.lmo(mom_buff)
+                update = lr * (k + 2) * norm_backend.lmo(mom_buff)
+                z = z0.add(update)
                 p_mom1 = primal_momentum1(k) if callable(primal_momentum1) else primal_momentum1
-                update = update * lr * (k + 2)
-                p.data.mul_(1 - p_mom1).add_(update, alpha=p_mom1)
+                p.data.mul_(1 - p_mom1).add_(z, alpha=p_mom1)
 
             group["k"] = k + 1
 
