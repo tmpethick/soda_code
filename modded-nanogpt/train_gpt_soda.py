@@ -131,10 +131,10 @@ class SODA(torch.optim.Optimizer):
                 if 'mom_buff' not in state.keys():
                     state['mom_buff'] = torch.clone(g)
                     state['x'] = torch.clone(y.data)
-                    state['z'] = torch.clone(y.data)
+                    state['z0'] = torch.clone(y.data)
                 mom_buff = state['mom_buff']
                 x = state['x']
-                z = state['z']
+                z = state['z0']
 
                 # Dual averaging
                 mom_buff.mul_(1-dual_momentum1).add_(g, alpha=dual_momentum1)
